@@ -12,14 +12,19 @@
   <div>
     <h1>EMNIST</h1>
   </div>
-  <div>
-    <canvas id="canvas"></canvas>
-  </div>
+  <canvas id="canvas" width="800" height="800"></canvas>
 
 
   <style>
-    canvas {
+    #card {
+      width: 800px;
+      height: 800px;
+      margin: auto;
+    }
+    #canvas {
       background-color: black;
+      /* width: 800px;
+      height: 800vh; */
     }
   </style>
 
@@ -31,17 +36,17 @@
 
     document.addEventListener("mousedown", start);
     document.addEventListener("mouseup", stop);
-    window.addEventListener("resize", resize);
+    // window.addEventListener("resize", resize);
 
-    resize();
+    // resize();
 
-    function resize() {
-      ctx.canvas.width = window.innerWidth;
-      ctx.canvas.height = window.innerHeight;
-    }
+    // function resize() {
+    //   ctx.canvas.width = window.innerWidth;
+    //   ctx.canvas.height = window.innerHeight;
+    // }
     function reposition(event) {
-      coord.x = event.clientX - canvas.offsetLeft;
-      coord.y = event.clientY - canvas.offsetTop;
+      coord.x = event.clientX - canvas.getBoundingClientRect().left;
+      coord.y = event.clientY - canvas.getBoundingClientRect().top;;
     }
     function start(event) {
       document.addEventListener("mousemove", draw);
