@@ -34,7 +34,7 @@
     const ctx = canvas.getContext("2d");
     let coord = { x: 0, y: 0 };
 
-    document.addEventListener("mousedown", start);
+    canvas.addEventListener("mousedown", start);
     document.addEventListener("mouseup", stop);
     // window.addEventListener("resize", resize);
 
@@ -44,16 +44,25 @@
     //   ctx.canvas.width = window.innerWidth;
     //   ctx.canvas.height = window.innerHeight;
     // }
+
+    canvas.addEventListener('touchstart', start);
+    document.addEventListener('touchend', stop);
+
+    canvas.addEventListener('touchmove', function (e) {e.preventDefault();});
+
+    
     function reposition(event) {
       coord.x = event.clientX - canvas.getBoundingClientRect().left;
       coord.y = event.clientY - canvas.getBoundingClientRect().top;;
     }
     function start(event) {
       document.addEventListener("mousemove", draw);
+      document.addEventListener('touchmove', draw);
       reposition(event);
     }
     function stop() {
       document.removeEventListener("mousemove", draw);
+      document.removeEventListener("touchmove", draw);
     }
     function draw(event) {
       ctx.beginPath();
