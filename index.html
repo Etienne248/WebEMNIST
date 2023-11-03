@@ -52,8 +52,8 @@
 
     
     function reposition(event) {
-      coord.x = event.clientX - canvas.getBoundingClientRect().left;
-      coord.y = event.clientY - canvas.getBoundingClientRect().top;;
+      coord.x = (event.touches ? event.touches[0].clientX : event.clientX) - canvas.getBoundingClientRect().left;
+      coord.y = (event.touches ? event.touches[0].clientY : event.clientY) - canvas.getBoundingClientRect().top;;
     }
     function start(event) {
       document.addEventListener("mousemove", draw);
