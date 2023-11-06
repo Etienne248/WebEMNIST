@@ -18,6 +18,7 @@
       <button onclick="resetCanvas()">Reset</button>
       <button onclick="Recognize()">Recognize</button>
       <button onclick="RecognizeReset()">Recognize and Reset</button>
+      <p id="displayText">Draw and clic on Recognize</p>
     </div>
     <canvas id="canvas_test" width="400" height="400"></canvas>
   </div>
@@ -30,7 +31,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      /* justify-content: center; */
+      justify-content: center;
       /* gap: 1rem; */
     }
 
@@ -45,7 +46,7 @@
       box-shadow: 0px 25px 50px rgba(56, 101, 185, 0.678);
       overflow: hidden;
       border-radius: 8px;
-
+      
     }
 
     #canvas {
@@ -66,13 +67,13 @@
 
 
     .button-container {
-      margin: 10px
+      margin: 10px;
     }
 
     button {
       cursor: pointer;
       outline: 0;
-      display: inline-block;
+      /* display: inline-block; */
       font-weight: 400;
       line-height: 1.5;
       text-align: center;
@@ -91,6 +92,16 @@
       background-color: #0d6efd;
       border-color: #0d6efd;
     }
+
+    #displayText {
+      text-align: center;
+      font-size: 1rem;
+      color: #ffffff;
+      border-radius: .25rem;
+      /* border-color: #0d6efd; */
+      background-color: #0d6efd;
+      padding: 6px 12px;
+    }
   </style>
 
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
@@ -99,7 +110,9 @@
     const ctx = canvas.getContext("2d");
     let coord = { x: 0, y: 0 };
 
-    const label = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    const labels = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    const displayElement = document.getElementById('displayText');
+
 
     canvas.addEventListener("mousedown", start);
     document.addEventListener("mouseup", stop);
@@ -133,7 +146,7 @@
     }
     function draw(event) {
       ctx.beginPath();
-      ctx.lineWidth = 50;
+      ctx.lineWidth = 30;
       ctx.lineCap = "round";
       ctx.strokeStyle = "#FFF";
       ctx.moveTo(coord.x, coord.y);
@@ -148,7 +161,7 @@
     function Recognize() {
       predict();
     }
-    function RecognizeReset(){
+    function RecognizeReset() {
       predict();
       resetCanvas();
     }
@@ -165,7 +178,7 @@
       tmpCanvas.width = canvas.width;
       tmpCanvas.height = canvas.height;
       let tmpCtx = tmpCanvas.getContext('2d');
-      tmpCtx.filter = 'blur(8px)';
+      tmpCtx.filter = 'blur(6px)';
       tmpCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
 
       let predictCanvas = document.getElementById('canvas_test');
@@ -189,13 +202,16 @@
           transposedData[x * 28 + y] = data[y * 28 + x]
         }
       }
-      
+
       const input = new ort.Tensor('float32', transposedData, [1, 1, 28, 28])
       const result = await session.run({ 'input': input })
       const logits = result.output.data
       const probas = softmax(logits)
       // console.log("=== Result", probas)
-      console.log("=== label", label[indexOfMax(probas)])
+      let maxIndex = indexOfMax(probas)
+      let label = labels[maxIndex]
+      console.log("=== label", label)
+      displayElement.textContent = "the model predicted : " + label + " with probability : " + probas[maxIndex].toFixed(2);
     }
 
     const getImgData = () => {
