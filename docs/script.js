@@ -39,6 +39,8 @@ function reposition(event) {
   coord.y = (event.touches ? event.touches[0].clientY : event.clientY) - canvas.getBoundingClientRect().top;;
 }
 function start(event) {
+  reposition(event);
+  draw(event)
   document.addEventListener("mousemove", draw);
   document.addEventListener('touchmove', draw);
   reposition(event);
@@ -49,7 +51,7 @@ function stop() {
 }
 function draw(event) {
   ctx.beginPath();
-  ctx.lineWidth = 30;
+  ctx.lineWidth = parseInt(canvas.width/13);
   ctx.lineCap = "round";
   ctx.strokeStyle = "#FFF";
   ctx.moveTo(coord.x, coord.y);
@@ -78,11 +80,11 @@ async function predict() {
   // const session = await ort.InferenceSession.create('./EMNIST.onnx')
 
   let tmpCanvas = document.createElement('canvas');
-  tmpCanvas.width = canvas.width;
-  tmpCanvas.height = canvas.height;
+  tmpCanvas.width = 400;
+  tmpCanvas.height = 400;
   let tmpCtx = tmpCanvas.getContext('2d');
   tmpCtx.filter = 'blur(6px)';
-  tmpCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
+  tmpCtx.drawImage(canvas, 0, 0, 400, 400);
 
   predictCanvas.width = 28;
   predictCanvas.height = 28;
@@ -105,15 +107,18 @@ async function predict() {
     }
   }
 
-  const input = new ort.Tensor('float32', transposedData, [1, 1, 28, 28])
-  const result = await session.run({ 'input': input })
-  const logits = result.output.data
-  const probas = softmax(logits)
-  // console.log("=== Result", probas)
-  let maxIndex = indexOfMax(probas)
-  let label = labels[maxIndex]
-  console.log("=== label", label)
-  displayElement.textContent = "the model predicted : " + label + " with probability : " + probas[maxIndex].toFixed(2);
+  const input = new ort.Tensor('float32', transposedData, [1, 1, 28, 28]);
+  const result = await session.run({ 'input': input });
+  const logits = result.output.data;
+  const probas = softmax(logits);
+  // console.log("=== Result", probas);
+  let maxIndex = indexOfMax(probas);
+  let label = labels[maxIndex];
+  console.log("=== label", label);
+
+  let hb = '<span class="highlightedText">';
+  let he = '</span>';
+  displayElement.innerHTML = 'The model predicted : ' +hb+ label +he+ ' with probability : ' + probas[maxIndex].toFixed(2);
 }
 
 const getImgData = () => {

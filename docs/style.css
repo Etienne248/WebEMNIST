@@ -69,9 +69,15 @@ button:hover {
 #displayText {
   text-align: center;
   font-size: 1rem;
-  color: #ffffff;
+  color: #f1f1f1;
   border-radius: .25rem;
   /* border-color: #0d6efd; */
-  background-color: #0d6efd;
+  background-color: #093c88;
   padding: 6px 12px;
+}
+
+.highlightedText{
+  color:rgb(255, 255, 255);
+  font-weight: bold;
+  font-size: 1.2rem;
 }
