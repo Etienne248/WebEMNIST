@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MNIST</title>
+  <link rel="stylesheet" type="text/css" href="./style.css">
+</head>
+
+<body>
+  <div>
+    <h1>EMNIST</h1>
+  </div>
+  <div id="card">
+    <canvas id="canvas" width="400" height="400"></canvas>
+    <div class="button-container">
+      <button onclick="resetCanvas()">Reset</button>
+      <button onclick="Recognize()">Recognize</button>
+      <button onclick="RecognizeReset()">Recognize and Reset</button>
+      <p id="displayText">Draw and clic on Recognize</p>
+    </div>
+    <canvas id="canvas_test" width="400" height="400"></canvas>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+  <script src="./script.js"></script>
+  
+</body>
+
+</html>

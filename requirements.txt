@@ -1,0 +1,7 @@
+matplotlib==3.8.0
+numpy==1.26.2
+onnx==1.15.0
+onnxruntime==1.16.2
+torch==2.0.1
+torchvision==0.15.2a0
+tqdm==4.66.1
